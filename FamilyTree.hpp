@@ -1,20 +1,41 @@
-#include <stdio.h>
-#include <string>
-#include<iostream>
+#ifndef FAMILYTREE_H
+#define FAMILYTREE_H
+#include<stdlib.h>
+#include <iostream>
+#include <string.h>
 using namespace std;
+
 namespace family{
 
-class Tree{
-string son;
+class node
+{
 public:
-Tree(string son){
-this->son=son;}
-Tree addFather(string som,string fathername);
-Tree addMother(string son,string mothername);
-string relation(string son);
-string find(string son);
-void display();
-bool remove(string son);
+    string name;
+    node *left; //Father
+    node *right; //Mother
+    node(string); 
 };
 
+
+class Tree {
+
+    public:
+
+    node* root;
+
+    Tree();
+    Tree(string); 
+    
+    Tree& addFather(string , string); 
+    Tree& addMother(string, string); 
+
+    void display();  
+    
+    string relation(string); 
+    string find(string); 
+    
+    string remove(string node); 
+
+};
 }
+#endif
