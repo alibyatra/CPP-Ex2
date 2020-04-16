@@ -1,13 +1,12 @@
 #include "FamilyTree.hpp"
 #include <stdio.h>
-#include <string>
-#include<iostream>
 
 using namespace family;
 
 Tree Tree::addFather(string son, string father){
 Tree a("name");
-return a;}
+return a;
+}
 Tree Tree::addMother(string son, string father){
 Tree a("name");
 return a;
