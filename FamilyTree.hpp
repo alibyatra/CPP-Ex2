@@ -15,16 +15,26 @@ public:
     node *right; //Mother
     int level;
     char gender;
-    node(string); 
+    
+    node(string name)
+  {
+    this->name = name;
+    this->left = NULL;
+    this->right = NULL;
+    this->level=0;
+    this->gender='m';
+ };
 };
 
 class Tree 
 {
 public:
     node* root;
+    Tree(string name)
+    {
+        this->root = new node(name);
+    };
 
-    Tree();
-    Tree(string); 
     void findSon(node *root, node** ptr ,const string son);
     Tree& addFather(string son , string father); 
     Tree& addMother(string son, string mother); 
@@ -33,8 +43,8 @@ public:
     string relation(string relative);
     string find(string relation, node *root); 
     string find(string relation); 
-    void remove(node* name);
-    string remove(string name);
+    void remove(node** name);
+    void remove(string name);
 };
 }
 #endif

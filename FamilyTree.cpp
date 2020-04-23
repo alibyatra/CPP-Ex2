@@ -6,23 +6,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
- namespace family{
-
-  node::node(string name)
-  {
-    this->name = name;
-    this->left = NULL;
-    this->right = NULL;
-    this->level=0;
- }
-
-
- Tree::Tree(): root(NULL){}
-
- Tree::Tree(string name)
- {
-    this->root = new node(name);
- }
+using namespace family;
 
 void Tree::findSon(node *root, node** ptr ,const string son) 
  {
@@ -42,19 +26,19 @@ void Tree::findSon(node *root, node** ptr ,const string son)
  {
     if (son=="" || father=="")
     {
-    throw 'Error, there is at least one word empty!';
+    throw "Error, there is at least one word empty!";
     return *this;
     }
      if(this->root==NULL)
     {
-        throw 'The family tree doesnt exist!';
+        throw "The family tree doesn't exist!";
         return  *this;
     }
     node *ptr;
     findSon(this->root,&ptr ,son);
     if(ptr==NULL)
     {
-        throw 'the son doesnt exist!';
+        throw "the son doesn't exist!";
         return *this;
     }
     else
@@ -70,19 +54,19 @@ void Tree::findSon(node *root, node** ptr ,const string son)
  {
     if (son=="" || mother=="")
     {
-    throw 'Error, there is at least one word empty!';
+    throw "Error, there is at least one word empty!";
     return *this;
     }
      if(this->root==NULL)
     {
-        throw 'The family tree doesnt exist!';
+        throw "The family tree doesn't exist!";
         return  *this;
     }
     node *ptr;
     findSon(this->root,&ptr ,son);
     if(ptr==NULL)
     {
-        throw 'the son doesnt exist!';
+        throw "the son does't exist!";
         return *this;
     }
     else
@@ -212,23 +196,25 @@ void printFamily(node *root, int space)
    cout << "**********************************" << endl; 
  }
 
- void Tree::remove(node* root)
+ void remove(node** root)
  {
   if(root != nullptr)
-  {
-  remove(root->left);
-  remove(root->right);
-  delete root;
-  }
+  return;
+  remove(&(*(root))->right);
+  remove(&(*(root))->left);
+  *root=nullptr;
+  delete *root;
  }
 
- string Tree::remove(string name)
+ void Tree::remove(string name)
  {
     node *ptr;
     findSon(this->root,&ptr,name);
     if(ptr!=NULL)
-        remove(ptr);
+    {
+        remove(&ptr->left);
+        remove(&ptr->right);
+    }
     else 
-        cout << "the Family Tree doesn't exist" << endl;
-  }
+        throw "the Family Tree doesn't exist";
  }
