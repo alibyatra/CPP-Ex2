@@ -4,16 +4,18 @@
 #include <string>
 #include <exception>
 #include <bits/stdc++.h>
+bool static check1 = false ;
+
 
 using namespace std;
 using namespace family;
 
 void Tree::findSon(node *root, node** ptr ,const string son) 
  {
-    if(root == NULL) *ptr=NULL;
+    if(root == NULL) return;
     if(root->name == son)
     {
-      *ptr = root  ;
+      *ptr = root;
     }
     else
     {
@@ -24,21 +26,26 @@ void Tree::findSon(node *root, node** ptr ,const string son)
 
  Tree& Tree::addFather(string son, string father)
  {
-    if (son=="" || father=="")
+      if (son=="" || father=="")
     {
-    throw "Error, there is at least one word empty!";
+    throw out_of_range{"Error, there is at least one word empty!"};
     return *this;
     }
      if(this->root==NULL)
     {
-        throw "The family tree doesn't exist!";
+    throw out_of_range{"The family tree doesn't exist!"};
         return  *this;
     }
-    node *ptr;
+    node *ptr=nullptr;
     findSon(this->root,&ptr ,son);
     if(ptr==NULL)
     {
-        throw "the son doesn't exist!";
+    throw out_of_range{"the son doesn't exist!"};
+        return *this;
+    }
+     if(ptr->left!=NULL)
+    {
+    throw out_of_range{"the is already father!"};
         return *this;
     }
     else
@@ -46,6 +53,7 @@ void Tree::findSon(node *root, node** ptr ,const string son)
         ptr->left=new node(father);
         ptr->left->level=ptr->level+1;
         ptr->left->gender='m';
+         this->size++;
     }
     return *this;
  }
@@ -54,19 +62,24 @@ void Tree::findSon(node *root, node** ptr ,const string son)
  {
     if (son=="" || mother=="")
     {
-    throw "Error, there is at least one word empty!";
+    throw out_of_range{"Error, there is at least one word empty!"};
     return *this;
     }
      if(this->root==NULL)
     {
-        throw "The family tree doesn't exist!";
+    throw out_of_range{"The family tree doesn't exist!"};
         return  *this;
     }
-    node *ptr;
+    node *ptr=nullptr;
     findSon(this->root,&ptr ,son);
     if(ptr==NULL)
     {
-        throw "the son does't exist!";
+    throw out_of_range{"the son does't exist!"};
+        return *this;
+    }
+    if(ptr->right!=NULL)
+    {
+    throw out_of_range{"there is already mother!"};
         return *this;
     }
     else
@@ -74,6 +87,7 @@ void Tree::findSon(node *root, node** ptr ,const string son)
         ptr->right=new node(mother);
         ptr->right->level=ptr->level+1;
         ptr->right->gender='f';
+        this->size++;
     }
     return *this;
  }
@@ -128,54 +142,78 @@ void Tree::findSon(node *root, node** ptr ,const string son)
     return relate;
  }
 
-string Tree::find(string relation, node *root)
-{
-if(relation == "grandfather")
-    {
-        return root->left->left->name;
-    }
-    else if(relation == "grandmother")
-    {
-        if(root->left->right != nullptr)
-        {
-            return root->left->right->name;
-        }
-        if(root->right->right != nullptr)
-        {
-            return root->right->right->name;
-        }
-    }
-    else
-    {
-        string str ;
-        str.append(relation.begin()+6,relation.end());
-        return find(str, root->left);
-    }
-    throw "we couldn't find the "+ relation +"in the tree";
-}
-
 string Tree::find(string relation)
 {
-    if (relation == "me")
-        return (root->name);
-    if ((relation == "father") && (root->left!=nullptr))
-        return (root->left->name);
-    if ((relation == "mother") && (root->right!=nullptr))
-        return (root->right->name);
-        else 
-        {   
-           try
-            {
-              return find(relation, root);
-            }  
-            catch(const std::exception& e)
-            {
-               throw runtime_error("The tree cannot handle the: " + relation + " relation");
-            }
-         }
+    int l =relation.length(),i=0;
+    
+    if(relation.compare("mother")==0||relation.compare("Mother")==0)
+    {
+        return this->root->right->name;
+    }
+    if(relation.compare("father")==0||relation.compare("Father")==0)
+    {
+        return this->root->left->name;
+    }
+    if(relation.compare("grandmother")==0||relation.compare("Grandmother")==0)
+    {
+        return this->root->right->right->name;
+    }
+    if(relation.compare("grandfather")==0||relation.compare("Grandfather")==0)
+    {
+        return this->root->left->left->name;
+    }
+
+     int height=0;
+        string str = relation;
+        while ((str != "grandmother" ) && (str != "grandfather"))
+        {
+            if(str.substr(0,6)!=("great-"))
+                {
+                 throw runtime_error("cannot find the reletion");
+                 
+                }
+            str = str.substr(6,(str.length()-6));
+            height++;
+        }
+        height=height+2;
+        
+        char gender='m';
+        if(str.compare("grandfather")==0)
+        {
+            gender='m';
+        }
+        else {
+            gender='f';        
+        }
+        
+       node *ptr=nullptr;
+       findName(height,this->root,&ptr,gender);
+       check1=false;
+        if(ptr==NULL)
+            throw runtime_error("cannot find the reletion");
+       
+        return ptr->name;
+        
+ }
+
+void Tree::findName(int height,node * root,node **ptr ,char gender)
+{
+    if(root == NULL) return;
+    if( root->level == height && root->gender==gender )
+    {
+        *ptr = root;
+        check1 = true ;
+
+    }
+    if(!check1)
+    {
+        Tree::findName(height , root->left , ptr ,gender);
+        Tree::findName(height ,  root->right , ptr,gender );
+    }
+    
 }
 
-void Tree::printFamily(node *root, int space)  
+ void Tree::printFamily(node *root, int space)  
 {   
    int COUNT=10;
     if (root == NULL)  
@@ -203,12 +241,12 @@ void Tree::printFamily(node *root, int space)
     if(ptr!=NULL)
     {
         if (ptr->name == "me")
-            throw "This function can't give you the " + name + "'s name";
+          throw runtime_error("This function can't give you the " + name + "'s name");
         ptr->left = nullptr;
         ptr->right = nullptr;
         ptr = nullptr;
         delete ptr;
     }
     else 
-        throw "the Family Tree doesn't exist";
+      throw runtime_error("the Family Tree doesn't exist");
  }

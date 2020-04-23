@@ -15,6 +15,7 @@ public:
     node *right; //Mother
     int level;
     char gender;
+    int size;
     
     node(string name)
   {
@@ -30,19 +31,22 @@ class Tree
 {
 public:
     node* root;
+     int size;
     Tree(string name)
     {
         this->root = new node(name);
+        this->size=0;
     };
 
     void findSon(node *root, node** ptr ,const string son);
     Tree& addFather(string son , string father); 
     Tree& addMother(string son, string mother); 
     void printFamily(node *root, int space);
-    void display(); 
+    void display();
     string relation(string relative);
-    string find(string relation, node *root); 
+    void findName(int level,node * root,node **ptr ,char gender);
     string find(string relation); 
+    void remove(node** root);
     void remove(string name);
 };
 }
