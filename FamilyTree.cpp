@@ -175,7 +175,7 @@ string Tree::find(string relation)
          }
 }
 
-void printFamily(node *root, int space)  
+void Tree::printFamily(node *root, int space)  
 {   
    int COUNT=10;
     if (root == NULL)  
