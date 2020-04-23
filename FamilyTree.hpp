@@ -43,7 +43,6 @@ public:
     string relation(string relative);
     string find(string relation, node *root); 
     string find(string relation); 
-    void remove(node** name);
     void remove(string name);
 };
 }

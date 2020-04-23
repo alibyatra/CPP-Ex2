@@ -196,24 +196,18 @@ void Tree::printFamily(node *root, int space)
    cout << "**********************************" << endl; 
  }
 
- void remove(node** root)
- {
-  if(root != nullptr)
-  return;
-  remove(&(*(root))->right);
-  remove(&(*(root))->left);
-  *root=nullptr;
-  delete *root;
- }
-
  void Tree::remove(string name)
  {
     node *ptr;
     findSon(this->root,&ptr,name);
     if(ptr!=NULL)
     {
-        remove(&ptr->left);
-        remove(&ptr->right);
+        if (ptr->name == "me")
+            throw "This function can't give you the " + name + "'s name";
+        ptr->left = nullptr;
+        ptr->right = nullptr;
+        ptr = nullptr;
+        delete ptr;
     }
     else 
         throw "the Family Tree doesn't exist";
