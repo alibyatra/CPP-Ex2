@@ -13,6 +13,7 @@ using namespace std;
     this->name = name;
     this->left = NULL;
     this->right = NULL;
+    this->level=0;
  }
 
 
@@ -59,6 +60,8 @@ void Tree::findSon(node *root, node** ptr ,const string son)
     else
     {
         ptr->left=new node(father);
+        ptr->left->level=ptr->level+1;
+        ptr->left->gender='m';
     }
     return *this;
  }
@@ -85,41 +88,60 @@ void Tree::findSon(node *root, node** ptr ,const string son)
     else
     {
         ptr->right=new node(mother);
+        ptr->right->level=ptr->level+1;
+        ptr->right->gender='f';
     }
     return *this;
  }
 
-
-
-
-
-
  string Tree::relation(string relative)
  {
-    string relate="unrelated";
-    if (relative == "")
-    throw relate;
-    else
+    node *ptr=nullptr;
+    findSon(this->root, &ptr , relative);
+    if(ptr==NULL)
     {
-       if (root->name == relative)
-       {
-       relate="me";
-       return relate;
-       }
-       if (root->left!=nullptr)
-       {
-          if (relate != "unrelated")
-          if (root->left->name==relative)
-          relate="father";
-           relate = left->relation(relative);
-          relate=relation(relative);
-       }
-       if (root->right->name==relative)
-       relate="mother";
-       relation(root->right->name);
+        return "unrelated" ;
     }
     
-    return relate;    
+    string str=ptr->name;
+
+    if(str.compare(this->root->name)==0 && ptr->level==0)
+    {
+        return "me .";
+    }
+    if(ptr->level==1 && str.compare(this->root->right->name)==0)
+    {
+        return "mother";
+    }
+    if(ptr->level==1 && str.compare(this->root->left->name)==0)
+    {
+        return "father";
+    }
+     if(ptr->level==2 && (str.compare(this->root->left->left->name)==0 ||str.compare(this->root->right->left->name)==0))
+    {
+        return "grandfather";
+    }
+     if(ptr->level==2 && (str.compare(this->root->left->right->name)==0 ||str.compare(this->root->right->right->name)==0))
+    {
+        return "grandmother";
+    }
+    string relate="";
+    if(ptr->level>2)
+    {
+        
+        int h=ptr->level;
+        while(h!=2)
+        {
+            relate=relate+"great-";
+            h--;
+        }
+        if(ptr->gender=='f')
+            relate+="grandmother";
+        if(ptr->gender=='m')
+            relate+="grandfather";
+        
+    }
+    return relate;
  }
 
 string Tree::find(string relation, node *root)
@@ -186,7 +208,7 @@ void printFamily(node *root, int space)
  void Tree::display()
  {
     cout << "display Fmaily :\n"<< endl; 
-    printFamily(this->root,0);
+    printFamily(root,0);
    cout << "**********************************" << endl; 
  }
 

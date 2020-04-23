@@ -10,10 +10,11 @@ namespace family{
 class node
 {
 public:
-    int gender;
     string name;
     node *left; //Father
     node *right; //Mother
+    int level;
+    char gender;
     node(string); 
 };
 
@@ -28,9 +29,8 @@ public:
     Tree& addFather(string son , string father); 
     Tree& addMother(string son, string mother); 
     void printFamily(node *root, int space);
-    void display();  
-    
-    string relation(string);
+    void display(); 
+    string relation(string relative);
     string find(string relation, node *root); 
     string find(string relation); 
     void remove(node* name);
